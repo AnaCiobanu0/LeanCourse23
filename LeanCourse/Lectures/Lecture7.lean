@@ -88,7 +88,7 @@ example (f : ℕ → ℝ) : ∑ i in range 0, f i = 0 :=
 example (f : ℕ → ℝ) (n : ℕ) : ∑ i in range (n + 1), f i = (∑ i in range n, f i) + f n :=
   sum_range_succ f n
 
-example (n : ℕ) : fac n = ∏ i in range n, (i + 1) := by
+example (n : ℕ) : fac n = ∏ i in range n, (i + 1) := by --product (1+1)(2+1)...(n+1) von 1 bis n
   induction n
   case zero => simp
   case succ k ih =>

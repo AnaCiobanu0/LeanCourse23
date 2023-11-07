@@ -22,12 +22,14 @@ open Nat Real Function Set
 
 /- Prove the law of excluded middle without using `by_cases` or lemmas from the library.
 You will need to use `by_contra` in the proof. -/
-lemma exercise3_1 (p : Prop) : p ∨ ¬ p := by sorry
+lemma exercise3_1 (p : Prop) : p ∨ ¬ p := by
+    by_contra a
+    push_neg at a
+    rcases a with ⟨h₀, h₁⟩
+    exact h₀ h₁
 
-
-
-
-
+lemma exercise3_1_2 (p : Prop) : p ∨ ¬ p := by
+    exact em (p)
 
 /- ## Converging sequences
 
@@ -42,7 +44,27 @@ by a reindexing function that tends to infinity
 produces a sequence that converges to the same value. -/
 lemma exercise3_2 {s : ℕ → ℝ} {r : ℕ → ℕ} {a : ℝ}
     (hs : SequentialLimit s a) (hr : ∀ m : ℕ, ∃ N : ℕ, ∀ n ≥ N, r n ≥ m) :
-    SequentialLimit (s ∘ r) a := by sorry
+    SequentialLimit (s ∘ r) a := by
+    intro a b
+    rw [SequentialLimit] at hs
+    sorry
+
+def NonDecreasing (f : ℝ → ℝ) : Prop := ∀ x₁ x₂ : ℝ, x₁ ≤ x₂ → f x₁ ≤ f x₂
+
+example (f g : ℝ → ℝ) (hg : NonDecreasing g) (hf : NonDecreasing f) :
+    NonDecreasing (g ∘ f) := by {
+  rw [NonDecreasing]
+  rw [NonDecreasing] at hf hg
+  intro x₁ x₂ hx₁x₂
+  -- have : f x₁ ≤ f x₂ := by
+  --   apply hf
+  --   exact hx₁x₂
+  specialize hf x₁ x₂ hx₁x₂  --hf auflösen
+  specialize hg (f x₁) (f x₂) hf  --hg in hf einbeten
+  rw [Function.comp, Function.comp]
+  exact hg
+}
+
 
 
 /- Let's prove the squeeze theorem for sequences.
@@ -51,7 +73,11 @@ You will want to use the lemma in the library that states
 lemma exercise3_3 {s₁ s₂ s₃ : ℕ → ℝ} {a : ℝ}
     (hs₁ : SequentialLimit s₁ a) (hs₃ : SequentialLimit s₃ a)
     (hs₁s₂ : ∀ n, s₁ n ≤ s₂ n) (hs₂s₃ : ∀ n, s₂ n ≤ s₃ n) :
-    SequentialLimit s₂ a := by sorry
+    SequentialLimit s₂ a := by
+    intro a b
+    rw [SequentialLimit] at hs₁ hs₃
+
+    sorry
 
 
 /- Let's prove that the sequence `n ↦ 1 / (n+1)` converges to `0`.
@@ -64,7 +90,16 @@ lemma exercise3_3 {s₁ s₂ s₃ : ℕ → ℝ} {a : ℝ}
 #check ⌈π⌉₊
 #check fun n : ℕ ↦ (n : ℝ)
 
-lemma exercise3_4 : SequentialLimit (fun n ↦ 1 / (n+1)) 0 := by sorry
+lemma exercise3_4 : SequentialLimit (fun n ↦ 1 / (n+1)) 0 := by
+   intros a b
+   have ha: a>0 := by assumption
+   use (⌈1/a⌉₊ : ℕ)
+   simp
+   intro q w
+   have h1: |(↑q + 1)⁻¹|=((↑q: ℝ) + 1)⁻¹:= by exact
+   sorry
+   sorry
+   sorry
 
 
 /- Use the previous exercises to prove that `n ↦ sin n / (n + 1)` converges to 0.
@@ -91,6 +126,7 @@ lemma use_me : SequentialLimit (fun n ↦ (-1) / (n+1)) 0 := by
   simp at this
   simp [neg_div, this]
 
+
 lemma exercise3_5 : SequentialLimit (fun n ↦ sin n / (n+1)) 0 := by sorry
 
 /- Now let's prove that if a convergent sequence is nondecreasing, then it must stay below the
@@ -99,7 +135,11 @@ def NondecreasingSequence (u : ℕ → ℝ) : Prop :=
   ∀ n m, n ≤ m → u n ≤ u m
 
 lemma exercise3_6 (u : ℕ → ℝ) (l : ℝ) (h1 : SequentialLimit u l) (h2 : NondecreasingSequence u) :
-    ∀ n, u n ≤ l := by sorry
+    ∀ n, u n ≤ l := by
+    intro a
+    rw [SequentialLimit] at h1
+    rw [NondecreasingSequence] at h2
+    sorry
 
 /- ## Sets
 
@@ -107,7 +147,10 @@ In the next few exercises, you prove more lemmas about converging sequences. -/
 
 
 lemma exercise3_7 {α β : Type*} (f : α → β) (s : Set α) (t : Set β) :
-    f '' s ∩ t = f '' (s ∩ f ⁻¹' t) := by sorry
+    f '' s ∩ t = f '' (s ∩ f ⁻¹' t) := by
+    ext a
+    sorry
+
 
 lemma exercise3_8 :
     (fun x : ℝ ↦ x ^ 2) ⁻¹' {y | y ≥ 4} = { x : ℝ | x ≤ -2 } ∪ { x : ℝ | x ≥ 2 } := by sorry

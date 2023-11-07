@@ -13,13 +13,13 @@ variable (h : a ≤ b) (h' : b ≤ c)
 #check (le_refl : ∀ a : Real, a ≤ a)
 #check (le_refl a : a ≤ a)
 #check (le_trans : a ≤ b → b ≤ c → a ≤ c)
-#check (le_trans h : b ≤ c → a ≤ c)
+#check (le_trans h : b ≤ c → a ≤ c) --dass a≤b wissen wir aus h
 #check (le_trans h h' : a ≤ c)
 
 end
 
 example (x y z : ℝ) (h₀ : x ≤ y) (h₁ : y ≤ z) : x ≤ z := by
-  apply le_trans
+  apply le_trans  --wieso die fragezeichen
   · apply h₀
   . apply h₁
 
@@ -34,7 +34,7 @@ example (x : ℝ) : x ≤ x := by
   apply le_refl
 
 example (x : ℝ) : x ≤ x :=
-  le_refl x
+  le_refl x --mit apply sucht er selbst auf was er einsetzt. ohne muss man sagen auf was einzusetzen
 
 #check (le_refl : ∀ a, a ≤ a)
 #check (le_trans : a ≤ b → b ≤ c → a ≤ c)
@@ -43,8 +43,14 @@ example (x : ℝ) : x ≤ x :=
 #check (lt_trans : a < b → b < c → a < c)
 
 -- Try this.
-example (h₀ : a ≤ b) (h₁ : b < c) (h₂ : c ≤ d) (h₃ : d < e) : a < e := by
-  sorry
+example (h₀ : a ≤ b) (h₁ : b < c) (h₂ : c ≤ d) (h₃ : d < e) : a < e :=
+    apply h₀
+    apply h₁
+    apply h₂
+    apply h₃
+    exact lt_of_lt_of_le --wieso kann man fast alles weg machen und es ist immer noch richtig
+
+
 
 example (h₀ : a ≤ b) (h₁ : b < c) (h₂ : c ≤ d) (h₃ : d < e) : a < e := by
   linarith
@@ -80,15 +86,25 @@ example (h : a ≤ b) : exp a ≤ exp b := by
   rw [exp_le_exp]
   exact h
 
+
 example (h₀ : a ≤ b) (h₁ : c < d) : a + exp c + e < b + exp d + e := by
   apply add_lt_add_of_lt_of_le
-  · apply add_lt_add_of_le_of_lt h₀
-    apply exp_lt_exp.mpr h₁
+  · apply add_lt_add_of_le_of_lt h₀   --a < b → c ≤ d → a + c < b + d
+    apply exp_lt_exp.mpr h₁ --besser h.2 statt h.mpr  und h.1 statt h.mp
   apply le_refl
 
-example (h₀ : d ≤ e) : c + exp (a + d) ≤ c + exp (a + e) := by sorry
+
+example (h₀ : d ≤ e) : c + exp (a + d) ≤ c + exp (a + e) := by
+  apply add_le_add
+  apply le_refl
+  apply exp_le_exp.mpr
+  apply add_le_add_left  --a ≤ b → ∀ c, c + a ≤ c + b
+  exact h₀
+
+
 
 example : (0 : ℝ) < 1 := by norm_num
+
 
 example (h : a ≤ b) : log (1 + exp a) ≤ log (1 + exp b) := by
   have h₀ : 0 < 1 + exp a := by sorry
@@ -101,7 +117,10 @@ example : 0 ≤ a ^ 2 := by
   exact sq_nonneg a
 
 example (h : a ≤ b) : c - exp b ≤ c - exp a := by
-  sorry
+  apply sub_le_sub
+  apply le_refl
+  apply exp_le_exp.2
+  exact h
 
 example : 2 * a * b ≤ a ^ 2 + b ^ 2 := by
   have h : 0 ≤ a ^ 2 - 2 * a * b + b ^ 2

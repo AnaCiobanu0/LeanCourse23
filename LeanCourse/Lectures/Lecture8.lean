@@ -46,8 +46,6 @@ For example in the structure below `Point` bundles three coordinates together.
 #check Point
 
 
-
-
 section
 
 /- Given a point, we get access to its coordinates / projections. -/

@@ -20,7 +20,21 @@ open Nat
 
 lemma exercise2_1 {α : Type*} {p q : α → Prop} :
     (∃ x, p x ∨ q x) ↔ (∃ x, p x) ∨ (∃ x, q x) := by
-  sorry
+    constructor
+    intro a
+    obtain ⟨hp, hq⟩ := a
+    sorry
+
+
+example (p q r s : Prop) (h : p → r) (h' : q → s) : p ∧ q → r ∧ s := by {
+  intro hpq
+  obtain ⟨hp, hq⟩ := hpq
+  constructor
+  · apply h
+    exact hp
+  · apply h'
+    exact hq
+}
 
 section Surjectivity
 
@@ -36,17 +50,26 @@ variable {f g : ℝ → ℝ} {x : ℝ}
 example : (g ∘ f) x = g (f x) := by simp
 
 lemma exercise2_2 (h : SurjectiveFunction (g ∘ f)) : SurjectiveFunction g := by
+  rw [SurjectiveFunction]
+  rw [SurjectiveFunction] at h
+  intro ge
   sorry
 
 /- Hint: you are allowed to use the previous exercise in this exercise! -/
 lemma exercise2_3 (hf : SurjectiveFunction f) :
     SurjectiveFunction (g ∘ f) ↔ SurjectiveFunction g := by
+  rw [SurjectiveFunction,SurjectiveFunction]
+  rw [SurjectiveFunction] at hf
+  constructor
+  intro q w
   sorry
 
 /- Composing a surjective function by a linear function to the left and the right will still result
 in a surjective function. The `ring` tactic will be very useful here! -/
 lemma exercise2_4 (hf : SurjectiveFunction f) :
     SurjectiveFunction (fun x ↦ 2 * f (3 * (x + 4)) + 1) := by
+  rw [SurjectiveFunction] at hf
+  rw [SurjectiveFunction]
   sorry
 
 end Surjectivity
@@ -74,6 +97,7 @@ lemma exercise2_5 : EventuallyGrowsFaster (fun n ↦ n * s n) s := by
 /- For the following exercise, it will be useful to know that you can write `max a b`
   to take the maximum of `a` and `b`, and that this lemma holds  -/
 lemma useful_fact (a b c : ℕ) : c ≥ max a b ↔ c ≥ a ∧ c ≥ b := by simp
+
 
 lemma exercise2_6 {s₁ s₂ t₁ t₂ : ℕ → ℕ}
     (h₁ : EventuallyGrowsFaster s₁ t₁) (h₂ : EventuallyGrowsFaster s₂ t₂) :

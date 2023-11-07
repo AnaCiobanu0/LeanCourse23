@@ -101,11 +101,11 @@ To use an "if and only if" statement `h`, you can use any of the following
 -/
 
 example (h : a ≤ b) : exp a ≤ exp b := by
-  apply exp_le_exp.2
+  apply exp_le_exp.2   --du musst richtung angeben. für apply ist für implikationen
   exact h
 
 example (h : a ≤ b) : exp a ≤ exp b := by
-  rw [exp_le_exp]
+  rw [exp_le_exp]  --du darfst keine richtung angeben. rw is für gleichung umschreiben
   exact h
 
 
@@ -117,7 +117,7 @@ example (h : exp a ≤ exp b) : a ≤ b := by
   exact h
 
 example (h : exp a ≤ exp b) : a ≤ b := by
-  rw [exp_le_exp] at h
+  rw [exp_le_exp] at h  --hier änderst du assumption, nicht das Ergebnis
   exact h
 
 
@@ -132,18 +132,22 @@ example (h : a ≤ b) (h2 : b ≤ c) : exp a ≤ exp c := by
 example (h : a ≤ b) : c - exp b ≤ c - exp a := by
   gcongr
 
+example {a b x c d : ℝ} (h1 : a + 1 ≤ b + 1) (h2 : c + 2 ≤ d + 2) :
+    x ^ 2 * a + c ≤ x ^ 2 * b + d := by
+  gcongr
+  · linarith
+  · linarith
 
 
 example (h : a ≤ b) (h2 : b < c) (h3 : x ≤ y) : a + x ≤ c + y := by {
-  gcongr
+  gcongr -- direkte folgerung (h3 : x ≤ y)
   apply le_of_lt
   calc a
      ≤ b := h
    _ < c := h2
   -- linarith
 }
-
-
+#check le_of_lt
 /- Remark: for equalities, you should use `congr` instead of `gcongr` -/
 
 example (h : a = b) : c - exp b = c - exp a := by
@@ -163,7 +167,7 @@ example (h : a = b) : c - exp b = c - exp a := by
   - You can search lemmas in the API documentation:
     https://leanprover-community.github.io/mathlib4_docs/
   - When typing a name, a list of suggested completions automatically shows up
-  - You can also press `ctrl-space` (or `cmd-space` on a Mac) to see the list of suggestions.
+  - You can also press `ctrl-space` (or `control-space` on a Mac) to see the list of suggestions.
   - Pressing `ctrl-space` twice displays more information about the available completions.
   - You can also press `ctrl-T` (or `cmd-T`) to search for a lemma name (choosing an option shows you where it is proven)
 
@@ -184,6 +188,9 @@ example (h : a < b) (h3 : x ≤ y) : a + exp x < b + exp y := by {
   · gcongr
 
 }
+#check add_lt_add_of_lt_of_le
+
+
 
 
 
@@ -202,7 +209,8 @@ example (n m k : ℕ) : m ∣ n * m * k := by {
   apply dvd_mul_left
 }
 
-
+#check dvd_mul_of_dvd_left
+#check dvd_mul_left
 
 /- We can prove if and only if statements using `constructor`.
   Afterwards we have to prove both implications. -/
@@ -217,7 +225,8 @@ example : a + b ≤ c ↔ a ≤ c - b := by {
     exact le_sub_iff_add_le.mp h
 }
 
-
+#check le_sub_left_of_add_le
+#check le_sub_iff_add_le
 
 /- The tactics for universal quantification and implication are the same.
 * We can use `intro` to prove an universal quantification or implication.
@@ -263,6 +272,7 @@ variable (x y z : α)
 /- every preorder comes automatically with an associated strict order -/
 example : x < y ↔ x ≤ y ∧ x ≠ y := by exact?
 
+#check lt_iff_le_and_ne
 
 /- the reverse order `≥`/`>` is defined from `≤`/`<`.
   Some tactics don't work well with `≥`/`>`,

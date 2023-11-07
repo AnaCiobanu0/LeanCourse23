@@ -68,7 +68,6 @@ example {c : ℝ} (h : c ≠ 0) : Surjective fun x ↦ c * x := by
   intro x
   use x / c
   field_simp [h] ; ring
-
 end
 
 section

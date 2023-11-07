@@ -37,7 +37,7 @@ We can use the same tactics as for implication:
 
 example {p : Prop} (h : p) : ¬ ¬ p := by
   intro h2
-  -- rw [Not] at h2
+  --rw [Not] at h2
   exact h2 h
 
 example {α : Type*} {p : α → Prop} :
@@ -48,7 +48,7 @@ example {α : Type*} {p : α → Prop} :
     exact ⟨x, hx⟩
   · intro h h2
     obtain ⟨x, hx⟩ := h2
-    specialize h x hx
+    specialize h x hx --spezialisiert h mit daten aus x und hx
     exact h
 
 
@@ -148,17 +148,26 @@ lemma sequentialLimit_unique (u : ℕ → ℝ) (l l' : ℝ) :
       _ < |l - l'| := by linarith
   linarith
 }
-
+#check Nat.le_max_left
 
 /- ## Exercises -/
 
 
 /- Prove the following without using `push_neg` or lemmas from the library.
 You will need to use `by_contra` in the proof. -/
-example {α : Type*} (p : α → Prop) : (∃ x, p x) ↔ (¬ ∀ x, ¬ p x) := by sorry
+example {α : Type*} (p : α → Prop) : (∃ x, p x) ↔ (¬ ∀ x, ¬ p x) := by
+    constructor
+    intro a b
+    by_contra f
+    sorry
 
 /- `simp` will be useful to simplify the goal. -/
-lemma convergesTo_const (a : ℝ) : SequentialLimit (fun n : ℕ ↦ a) a := by sorry
+lemma convergesTo_const (a : ℝ) : SequentialLimit (fun n : ℕ ↦ a) a := by
+   intro ar b
+   dsimp
+   sorry
+
+
 
 /- The next exercise is harder, and you will probably not finish it during class. -/
 lemma SequentialLimit.add {s t : ℕ → ℝ} {a b : ℝ}
@@ -222,9 +231,13 @@ corresponds by definition to conjunction, disjunction or negation. -/
 -/
 example (hxs : x ∈ s) (hxt : x ∈ t) :
     x ∈ s ∩ t := by
-  -- rw [mem_inter_iff]
-  simp [hxs, hxt]
-  -- exact ⟨hxs, hxt⟩
+   rw [mem_inter_iff]
+  --simp [hxs, hxt]
+   exact ⟨hxs, hxt⟩
+
+   example (hxs : x ∈ s) (hxt : x ∈ t) :
+    x ∈ s ∩ t := by
+    simp [hxs, hxt]
 
 
 example (hxs : x ∈ s) : x ∈ s ∪ t := by

@@ -46,8 +46,8 @@ example (f g : ℝ → ℝ) (hg : NonDecreasing g) (hf : NonDecreasing f) :
   -- have : f x₁ ≤ f x₂ := by
   --   apply hf
   --   exact hx₁x₂
-  specialize hf x₁ x₂ hx₁x₂
-  specialize hg (f x₁) (f x₂) hf
+  specialize hf x₁ x₂ hx₁x₂  --hf auflösen
+  specialize hg (f x₁) (f x₂) hf  --hg in hf einbeten
   rw [Function.comp, Function.comp]
   exact hg
 }
@@ -171,6 +171,8 @@ example {α : Type*} [PartialOrder α]
     (x y : α) (hxy : x < y) :
     ∃ z₁ z₂ : α, x < z₁ ∧ z₁ < z₂ ∧ z₂ < y := by {
   -- specialize IsDense x y hxy
+
+
   obtain ⟨z, h1z, h2z⟩ := IsDense x y hxy
   use z
   obtain ⟨z', h1z', h2z'⟩ := IsDense z y h2z
@@ -202,12 +204,24 @@ example {α : Type*} {p q : α → Prop} (h : ∀ x, p x → q x) :
 
 
 example {α : Type*} {p : α → Prop} {r : Prop} :
-    ((∃ x, p x) → r) ↔ (∀ x, p x → r) := by sorry
-
+    ((∃ x, p x) → r) ↔ (∀ x, p x → r) := by {
+  constructor
+  · intro a b c
+    apply a
+    use b
+  · intro d e
+    sorry
+}
 
 example {α : Type*} {p : α → Prop} {r : Prop} :
-    (∃ x, p x ∧ r) ↔ ((∃ x, p x) ∧ r) := by sorry
-
+    (∃ x, p x ∧ r) ↔ ((∃ x, p x) ∧ r) := by
+    constructor
+    · intro a
+      constructor
+      exact sorry
+      sorry
+    · intro b
+      sorry
 
 
 
@@ -245,7 +259,7 @@ example : a = a * b → a = 0 ∨ b = 1 := by {
     linarith
 }
 
-
+--??
 example (f : ℝ → ℝ) (hf : StrictMono f) : Injective f := by {
   rw [Injective]
   rw [StrictMono] at hf

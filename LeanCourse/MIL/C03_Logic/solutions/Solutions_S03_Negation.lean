@@ -34,14 +34,19 @@ example : ¬FnHasUb fun x ↦ x := by
 example (h : Monotone f) (h' : f a < f b) : a < b := by
   apply lt_of_not_ge
   intro h''
-  apply absurd h'
+  apply absurd h' --wenn h' stimmt, ist das gegenteil absurd
   apply not_lt_of_ge (h h'')
+
+#check lt_of_not_ge
+#check absurd
+#check not_lt_of_ge
 
 example (h : a ≤ b) (h' : f b < f a) : ¬Monotone f := by
   intro h''
   apply absurd h'
   apply not_lt_of_ge
-  apply h'' h
+  apply h''
+  apply h
 
 example : ¬∀ {f : ℝ → ℝ}, Monotone f → ∀ {a b}, f a ≤ f b → a ≤ b := by
   intro h

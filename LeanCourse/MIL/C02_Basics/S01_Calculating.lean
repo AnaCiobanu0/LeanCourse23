@@ -139,5 +139,5 @@ example (hyp : c = d * a + b) (hyp' : b = a * d) : c = 2 * a * d := by
 end
 
 example (a b c : ℕ) (h : a + b = c) : (a + b) * (a + b) = a * c + b * c := by
-  nth_rw 2 [h]
+  nth_rw 2 [h]   --replaces the second occurrence of a + b with c
   rw [add_mul]

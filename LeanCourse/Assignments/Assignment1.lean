@@ -1,5 +1,7 @@
 import LeanCourse.Common
 
+
+--Ana Ciobanu
 /-
 
 * Make sure to follow the instructions in the README to install Lean and set up this repository locally.
@@ -19,12 +21,25 @@ import LeanCourse.Common
 Do the next exercise using only the `rw` tactic with lemmas `add_comm` and `add_assoc`.
 -/
 
-lemma exercise1_1 (a b c d : ℝ) : a + b + c + d = d + (b + a) + c := by sorry
+lemma exercise1_1 (a b c d : ℝ) : a + b + c + d = d + (b + a) + c := by
+  rw[add_comm]
+  rw[←add_assoc]
+  rw[add_comm b a]
 
+
+#check add_comm
+#check add_assoc
 /-
 Also do the proof using `calc`, where on each `calc` line, you use `rw` only once.
 -/
-lemma exercise1_2 (a b c d : ℝ) : a + b + c + d = d + (b + a) + c := by sorry
+lemma exercise1_2 (a b c d : ℝ) : a + b + c + d = d + (b + a) + c :=
+  calc
+    a + b + c + d = d + (a + b + c) := by
+      rw[add_comm]
+    d + (a + b + c) = d + (b + a) + c := by
+      rw[←add_assoc]
+    d + (b + a) + c = d + (b + a) + c := by
+      rw[add_comm b a]
 
 /-
 Do the following exercise using the `rw` tactic only.
@@ -45,8 +60,11 @@ The following lemmas may be useful.
 `zero_add a      : 0 + a = a`
 -/
 
-lemma exercise1_3 (a b : ℝ) : (a + b) * (a - b) = a^2 - b^2 := by sorry
+lemma exercise1_3 (a b : ℝ) : (a + b) * (a - b) = a^2 - b^2 := by
+  rw[add_mul, mul_sub, mul_sub, mul_comm a b, ←pow_two b, ←pow_two a, add_sub, sub_add, sub_self, sub_zero]
+
 
 -- Now redo it with `ring`.
 
-lemma exercise1_4 (a b : ℝ) : (a + b) * (a - b) = a^2 - b^2 := by sorry
+lemma exercise1_4 (a b : ℝ) : (a + b) * (a - b) = a^2 - b^2 := by
+    ring

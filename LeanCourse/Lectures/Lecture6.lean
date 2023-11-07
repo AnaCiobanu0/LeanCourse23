@@ -17,6 +17,7 @@ Last time we discussed negation `¬` (not), classical logic, sequences and sets.
 
 You can prove that two sets are equal by applying `subset_antisymm` or using the `ext` tactic.
 -/
+#check subset_antisymm
 
 
 variable {α β : Type*} (x : α) (s t : Set α)
@@ -36,7 +37,7 @@ example : (s ∪ tᶜ) ∩ t = s ∩ t := by
     _ = (s ∩ t) ∪ ∅ := by rw [@compl_inter_self]
     _ = s ∩ t := by rw [@union_empty]
 
-
+--why @
 
 
 /-
@@ -49,7 +50,7 @@ def Odds : Set ℕ := {n | ¬ Even n}
 
 example : Evens ∪ Odds = univ := by
   ext n
-  simp [Evens, Odds]
+  simp [Evens, Odds] --hm
   exact em (Even n)
 
 
@@ -148,7 +149,8 @@ example (f : α → β) (s : Set α) : { f x | x ∈ s} = { y : β | ∃ x ∈ s
 
 example {s : Set α} {t : Set β} {f : α → β} : f '' s ⊆ t ↔ s ⊆ f ⁻¹' t := by
   constructor
-  · intro h x hx
+  · intro h
+    intro x hx
     simp
     apply h
     exact mem_image_of_mem f hx
@@ -161,7 +163,7 @@ example {s : Set α} {t : Set β} {f : α → β} : f '' s ⊆ t ↔ s ⊆ f ⁻
     simp at h
     exact h
 
-
+#check mem_image
 /-
 If you have a hypothesis `h : y = t` or `h : t = y`,
 where `y` is a variable (and `t` anything),
@@ -195,10 +197,7 @@ example : ({1, 3, 5} : Set ℝ) + {0, 10} = {1, 3, 5, 11, 13, 15} := by
   norm_num
   tauto
 
-
-
-
-
+#check mem_add
 
 
 

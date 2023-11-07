@@ -223,7 +223,6 @@ example : Continuous (fun x ↦ 2 + x * Real.sin x) := by {
 
 
 
-
 /-
 # Difference between `rw` and `apply`
 - `rw` can be used to rewrite a subexpression (almost) anywhere in the goal,

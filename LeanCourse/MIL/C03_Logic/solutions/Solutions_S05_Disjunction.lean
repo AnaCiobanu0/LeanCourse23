@@ -21,12 +21,6 @@ theorem neg_le_abs_self (x : ℝ) : -x ≤ |x| := by
     linarith
   . rw [abs_of_neg h]
 
-theorem abs_add (x y : ℝ) : |x + y| ≤ |x| + |y| := by
-  rcases le_or_gt 0 (x + y) with h | h
-  · rw [abs_of_nonneg h]
-    linarith [le_abs_self x, le_abs_self y]
-  . rw [abs_of_neg h]
-    linarith [neg_le_abs_self x, neg_le_abs_self y]
 
 theorem lt_abs : x < |y| ↔ x < y ∨ x < -y := by
   rcases le_or_gt 0 y with h | h
@@ -75,6 +69,8 @@ end
 
 example {z : ℝ} (h : ∃ x y, z = x ^ 2 + y ^ 2 ∨ z = x ^ 2 + y ^ 2 + 1) : z ≥ 0 := by
   rcases h with ⟨x, y, rfl | rfl⟩ <;> linarith [sq_nonneg x, sq_nonneg y]
+  --<;> apply auf alle seiten 
+#check sq_nonneg
 
 example {x : ℝ} (h : x ^ 2 = 1) : x = 1 ∨ x = -1 := by
   have h' : x ^ 2 - 1 = 0 := by rw [h, sub_self]
@@ -86,6 +82,11 @@ example {x : ℝ} (h : x ^ 2 = 1) : x = 1 ∨ x = -1 := by
     exact eq_neg_iff_add_eq_zero.mpr h1
   . left
     exact eq_of_sub_eq_zero h1
+
+  #check eq_zero_or_eq_zero_of_mul_eq_zero
+  #check eq_neg_iff_add_eq_zero
+  #check eq_of_sub_eq_zero
+
 
 example {x y : ℝ} (h : x ^ 2 = y ^ 2) : x = y ∨ x = -y := by
   have h' : x ^ 2 - y ^ 2 = 0 := by rw [h, sub_self]

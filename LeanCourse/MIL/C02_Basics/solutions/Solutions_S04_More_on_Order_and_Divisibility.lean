@@ -53,7 +53,7 @@ example : min a b + c = min (a + c) (b + c) := by
   apply add_le_add_right
   rw [sub_eq_add_neg]
   apply le_trans
-  apply aux
+  apply aux   --???
   rw [add_neg_cancel_right, add_neg_cancel_right]
 
 example : |a| - |b| ≤ |a - b| :=
@@ -61,8 +61,10 @@ example : |a| - |b| ≤ |a - b| :=
     |a| - |b| = |a - b + b| - |b| := by rw [sub_add_cancel]
     _ ≤ |a - b| + |b| - |b| := by
       apply sub_le_sub_right
-      apply abs_add
+      apply abs_add   --|a-b + b| ≤ |a-b| + |b|
     _ ≤ |a - b| := by rw [add_sub_cancel]
+
+  #check (abs_add : ∀ a b : ℝ, |a + b| ≤ |a| + |b|)
 
 
 -- alternatively
@@ -80,17 +82,17 @@ example (h₀ : x ∣ y) (h₁ : y ∣ z) : x ∣ z :=
   dvd_trans h₀ h₁
 
 example : x ∣ y * x * z := by
-  apply dvd_mul_of_dvd_left
-  apply dvd_mul_left
+  apply dvd_mul_of_dvd_left   --macht weg mult von rechts
+  apply dvd_mul_left --macht weg mult von links
 
 example : x ∣ x ^ 2 := by
    apply dvd_mul_left
 
 example (h : x ∣ w) : x ∣ y * (x * z) + x ^ 2 + w ^ 2 := by
-  apply dvd_add
+  apply dvd_add  --macht weg add von rechts
   · apply dvd_add
-    · apply dvd_mul_of_dvd_right
-      apply dvd_mul_right
+    · apply dvd_mul_of_dvd_right --macht weg mult von links
+      apply dvd_mul_right  --macht weg mult von rechts
     apply dvd_mul_left
   rw [pow_two]
   apply dvd_mul_of_dvd_right

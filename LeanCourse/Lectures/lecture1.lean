@@ -62,14 +62,6 @@ example (f : ℝ → ℝ) (u : ℕ → ℝ) (x₀ : ℝ)
 
 
 
-
-
-
-
-
-
-
-
 /-!
 # How does Lean help you?
 
